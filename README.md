@@ -86,10 +86,10 @@ data_root = '<user_path>'
 To Train on multiple GPUs use <i>tools/dist_train.sh</i> to launch training on multiple GPUs:
 
 ```
-./tools/dist_train.sh ./configs/<experiment>/<variant.py> 4
+./tools/dist_train.sh ./configs/<experiment>/<variant.py> <#GPUs>
 ```
 
-E.g: To train GOL use:
+E.g: To train GOL on 4 GPUs use:
 ```
 ./tools/dist_train.sh ./configs/droploss/droploss_normed_mask_r50_rfs_4x4_2x_gumbel.py 4
 ```
@@ -102,12 +102,12 @@ To test GOL:
 
 
 <h1>Reproduce</h1>
-To reproduce the results on the the paper with Gumbel, Softmax and Sigmoid activation run:
+To reproduce the results on the the paper with Sigmoid, Softmax and Gumbel activation run:
 
 ```
-./tools/dist_train.sh ./configs/activations/gumbel/gumbel_r50_4x4_1x.py <#GPUs>
-./tools/dist_train.sh ./configs/activations/r50_4x4_1x_softmax.py <#GPUs>
 ./tools/dist_train.sh ./configs/activations/r50_4x4_1x.py <#GPUs>
+./tools/dist_train.sh ./configs/activations/r50_4x4_1x_softmax.py <#GPUs>
+./tools/dist_train.sh ./configs/activations/gumbel/gumbel_r50_4x4_1x.py <#GPUs>
 ```
 It will give a Table similar to this:
 <table style="float: center; margin-right: 10px;">
@@ -166,7 +166,7 @@ It will give a Table similar to this:
         <td>30.1</td>
         <td>28.2</td>
         <td><a href="https://www.dropbox.com/s/pl2t9aug7rrwuja/epoch_24.pth?dl=0">weights</a></td>
-        <td><a href="https://www.dropbox.com/s/6tc73ke3hq8zqzc/20220524_141924.log?dl=0">log</a></td>
+        <td><a href="https://www.dropbox.com/s/6tc73ke3hq8zqzc/20220524_141924.log?dl=0">log</a>|<a href="https://www.dropbox.com/s/lqb2tbo9771tu04/droploss_normed_mask_r50_lvis05_rfs_4x4_2x_gumbel.py?dl=0">config</a></td>
     </tr>
     <tr>
         <td>GOL_r50_v1</td>
@@ -176,7 +176,7 @@ It will give a Table similar to this:
         <td>30.4</td>
         <td>27.5</td>
         <td><a href="https://www.dropbox.com/s/caav66oardal9ny/epoch_24.pth?dl=0">weights</a></td>
-        <td><a href="https://www.dropbox.com/s/ei31bb2supyn6ef/20220711_133821.log?dl=0">log</a></td>
+        <td><a href="https://www.dropbox.com/s/ei31bb2supyn6ef/20220711_133821.log?dl=0">log</a>|<a href="https://www.dropbox.com/s/64vkqc83m2etx6l/droploss_normed_mask_r50_rfs_4x4_2x_gumbel.py?dl=0">config</a></td>
     </tr>
     <tr>
         <td>GOL_r101_v1</td>
@@ -186,7 +186,7 @@ It will give a Table similar to this:
         <td>31.7</td>
         <td>29.2</td>
         <td><a href="https://www.dropbox.com/s/l76cge8hbb4s2e9/epoch_24.pth?dl=0">weights</a></td>
-        <td><a href="https://www.dropbox.com/s/o92neoc1ogopokg/20220711_074416.log?dl=0">log</a></td>
+        <td><a href="https://www.dropbox.com/s/o92neoc1ogopokg/20220711_074416.log?dl=0">log</a>|<a href="https://www.dropbox.com/s/n2325d7q534x6g8/droploss_normed_mask_r101_rfs_4x4_2x_gumbel.py?dl=0">config</a></td>
     </tr>
 
 </table>
