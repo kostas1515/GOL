@@ -18,10 +18,6 @@ def get_image_count_frequency(version="v0_5"):
     else:
         raise KeyError(f"version {version} is not supported")
         
-def get_frequent_indices(lvis_file,threshold=100):
-    lvis = pd.read_csv(lvis_file)
-    frequent_mask = lvis['img_freq'].values[1:]>threshold
-    return torch.tensor(frequent_mask,device='cuda')
 
 @LOSSES.register_module()
 class DropLoss(nn.Module):
@@ -101,9 +97,6 @@ class DropLoss(nn.Module):
                 avg_factor=None,
                 reduction_override=None,
                 **kwargs):
-        
-        if self.use_iif is True:
-            cls_score=self.iif_weights*cls_score.clone()
         
         
         self.n_i, self.n_c = cls_score.size()

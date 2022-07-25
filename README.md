@@ -91,7 +91,7 @@ To Train on multiple GPUs use <i>tools/dist_train.sh</i> to launch training on m
 
 E.g: To train GOL on 4 GPUs use:
 ```
-./tools/dist_train.sh ./configs/droploss/droploss_normed_mask_r50_rfs_4x4_2x_gumbel.py 4
+./tools/dist_train.sh ./configs/gol/droploss_normed_mask_r50_rfs_4x4_2x_gumbel.py 4
 ```
 <h1>Testing</h1>
 
