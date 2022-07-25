@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .accuracy import accuracy
 from ..builder import LOSSES
-import pandas as pd
 
 
 def get_image_count_frequency(version="v0_5"):
@@ -34,9 +33,7 @@ class DropLoss(nn.Module):
                  lambda_=0.00177,
                  version="v0_5",
                  use_classif='gumbel',
-                 num_classes=1203,
-                 use_iif=False,
-                 lvis_files='./lvis_files/idf_1204.csv'):
+                 num_classes=1203):
         super(DropLoss, self).__init__()
         self.use_sigmoid = use_sigmoid
         self.reduction = reduction
@@ -46,14 +43,11 @@ class DropLoss(nn.Module):
         self.version = version
         self.freq_info = torch.FloatTensor(get_image_count_frequency(version))
         self.use_classif=use_classif
-        self.use_iif=use_iif
         self.num_classes=num_classes
         self.custom_cls_channels = True
         self.custom_activation = True
         self.custom_accuracy = True
         
-        if self.use_classif == 'cls_rel':
-            self.frequent_classes=get_frequent_indices(lvis_files)
 
         num_class_included = torch.sum(self.freq_info < self.lambda_)
         print(f"set up DropLoss (version {version}), {num_class_included} classes included.")
@@ -91,10 +85,6 @@ class DropLoss(nn.Module):
         
         if self.use_classif=='gumbel':
             scores = 1/(torch.exp(torch.exp(-cls_score)))
-        elif self.use_classif=='normal':
-            scores=1/2+torch.erf(cls_score/(2**(1/2)))/2
-        elif self.use_classif=='cls_rel':
-            scores=self.class_relative_act(cls_score,inference=True)
         else:
             scores=torch.sigmoid(cls_score)
         
@@ -102,27 +92,6 @@ class DropLoss(nn.Module):
         scores = torch.cat([scores, dummpy_prob], dim=1)
         
         return scores
-    
-    def class_relative_act(self,pred,inference=False):
-        frequent_classes = self.frequent_classes
-        freq_mask = torch.zeros_like(pred)
-        freq_mask[:,frequent_classes] = 1.0
-        
-        rc_mask= torch.zeros_like(pred)
-        rc_mask[:,~frequent_classes] = 1.0
-
-        if inference is False:
-            normits = torch.clamp(pred,min=-5.0,max=5.0)
-            gombits = torch.clamp(pred,min=-4.0,max=10.0)
-            pred_normal= 1/2+torch.erf(normits/(2**(1/2)))/2
-            pred_gumbel= 1/(torch.exp(torch.exp(-gombits)))
-        else:
-            pred_normal= 1/2+torch.erf(pred/(2**(1/2)))/2
-            pred_gumbel= 1/(torch.exp(torch.exp(-pred)))
-
-        pestim = pred_gumbel*rc_mask + pred_normal*freq_mask
-        
-        return pestim
         
 
     def forward(self,
@@ -150,16 +119,9 @@ class DropLoss(nn.Module):
         target = expand_label(cls_score, label)
         drop_w = 1 - self.threshold_func() * (1 - target)
         
-        if self.use_classif =='normal':
-            cls_score=torch.clamp(cls_score,min=-5,max=5)
-            pestim=1/2+torch.erf(cls_score/(2**(1/2)))/2
-            cls_loss = F.binary_cross_entropy(pestim, target,reduction='none')
-        elif self.use_classif =='gumbel':
+        if self.use_classif =='gumbel':
             cls_score=torch.clamp(cls_score,min=-4,max=10)
             pestim= 1/(torch.exp(torch.exp(-(cls_score))))
-            cls_loss = F.binary_cross_entropy(pestim, target,reduction='none')
-        elif self.use_classif =='cls_rel':
-            pestim=self.class_relative_act(cls_score)
             cls_loss = F.binary_cross_entropy(pestim, target,reduction='none')
         else:
             cls_loss = F.binary_cross_entropy_with_logits(cls_score, target,reduction='none')
