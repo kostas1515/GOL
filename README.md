@@ -1,6 +1,10 @@
 <h1> Gumbel Optimised Loss for Long-tailed Instance Segmentation </h1>
 
-This is the official implementation of Gumbel Optimised Loss for Long-tailed Instance Segmentation for ECCV2022 accepted paper.
+This is the official implementation of Gumbel Optimised Loss for Long-tailed Instance Segmentation for ECCV2022 accepted <a href='https://arxiv.org/abs/2207.10936'>paper</a>.
+
+<h1> Introduction </h1>
+
+Major advancements have been made in the field of object detection and segmentation recently. However, when it comes to rare categories, the state-of-the-art methods fail to detect them, resulting in a significant performance gap between rare and frequent categories. In this paper, we identify that Sigmoid or Softmax functions used in deep detectors are a major reason for low performance and are suboptimal for long-tailed detection and segmentation. To address this, we develop a Gumbel Optimized Loss (GOL), for long-tailed detection and segmentation. It aligns with the Gumbel distribution of rare classes in imbalanced datasets, considering the fact that most classes in long-tailed detection have low expected probability. The proposed GOL significantly outperforms the best state-of-the-art method by 1.1% on AP, and boosts the overall segmentation by 9.0% and detection by 8.0%, particularly improving detection of rare classes by 20.3%, compared to Mask-RCNN, on LVIS dataset.
 
 Gumbel Activation using (M)ask-RCNN, (R)esnet,Resne(X)t, (C)ascade Mask-RCNN and (H)ybrid Task Cascade.
 <img src="./figures/ap_maskrcnn.jpg"
@@ -191,6 +195,15 @@ It will give a Table similar to this:
 
 </table>
 
+## Citation
+     @inproceedings{alexandridis2022long,
+       title={Long-tailed Instance Segmentation using Gumbel Optimized Loss},
+       author={Alexandridis, Konstantinos Panagiotis and Deng, Jiankang and Nguyen, Anh and Luo, Shan},
+       booktitle={European Conference on Computer Vision},
+       pages={353--369},
+       year={2022},
+       organization={Springer}
+     }
      
 <h1> Acknowledgements </h1>
      This code uses the <a href='https://github.com/open-mmlab/mmdetection'>mmdet</a> framework. It also uses <a href='https://github.com/tztztztztz/eqlv2'>EQLv2</a> and <a href='https://github.com/timy90022/DropLoss'>DropLoss</a>. Thank you for your wonderfull work! 
